@@ -1,5 +1,40 @@
 # rc-falco
 
+
+## First we need to install Falco
+
+#### Install Falco on the host/node (Ubuntu/Debian)
+
+```
+curl -s https://falco.org/repo/falcosecurity-3672BA8F.asc | apt-key add -
+echo "deb https://download.falco.org/packages/deb stable main" | tee -a /etc/apt/sources.list.d/falcosecurity.list
+apt-get update -y
+
+apt-get -y install linux-headers-$(uname -r)
+apt-get install -y falco
+```
+
+#### Edit the config files
+
+```
+# Open /etc/falco/falco.yaml
+# Find the section that starts with `program_output` and it should look like below
+
+program_output:
+  enabled: true
+  keep_alive: false 
+  program: "jq '{event: .}' | curl --header 'Content-Type: application/json' -d @- -X POST http://your-ip:5000/events"
+```
+
+#### Start falco
+
+```
+falco
+```
+
+## Now we are going to install our custom containers
+
+
 #### Get started with docker
 
 ```
@@ -16,7 +51,7 @@ pip3 install -r requirements.txt
 python3 app.py
 ```
 
-Now browse to `http://your-ip:5000`
+Now browse to `http://your-ip:5000` and you should see the UI
 
 
 #### Generate some fake events
@@ -25,3 +60,5 @@ Now browse to `http://your-ip:5000`
 docker pull falcosecurity/event-generator:latest
 docker run falcosecurity/event-generator run
 ```
+
+Back in the UI - you should see events populated
