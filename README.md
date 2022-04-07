@@ -1,5 +1,14 @@
 # rc-falco
 
+## About
+
+This repository provides a minimal example of using [Falco](https://falco.org/) for detection and analysis. If you follow the instructions below, you will have Falco running, an Web UI to consume the Falco alerts and the Falco alert generator.
+
+## Prereqs
+
++ Ubuntu/debian based OS
++ Docker installed (with docker tools for building images)
+
 
 ## First we need to install Falco
 
