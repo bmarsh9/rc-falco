@@ -43,7 +43,7 @@ docker build -t rc-falco .
 docker run -p 5000:5000 rc-falco
 ```
 
-#### Get started from scratch 
+#### (Or) Get started from scratch 
 
 ```
 git clone https://github.com/bmarsh9/rc-falco.git
