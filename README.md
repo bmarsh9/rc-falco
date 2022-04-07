@@ -42,7 +42,7 @@ program_output:
 #### Start falco
 
 ```
-falco
+falco -pc
 ```
 
 ## Now we are going to install our custom containers
