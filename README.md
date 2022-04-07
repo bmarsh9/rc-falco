@@ -1,6 +1,13 @@
 # rc-falco
 
-#### Get started 
+#### Get started with docker
+
+```
+docker build -t rc-falco .
+docker run -p 5000:5000 rc-falco
+```
+
+#### Get started from scratch 
 
 ```
 pip3 install -r requirements.txt
