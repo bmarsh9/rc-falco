@@ -17,3 +17,11 @@ python3 app.py
 ```
 
 Now browse to `http://your-ip:5000`
+
+
+#### Generate some fake events
+
+```
+docker pull falcosecurity/event-generator:latest
+docker run falcosecurity/event-generator run
+```
