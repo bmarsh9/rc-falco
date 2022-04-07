@@ -4,6 +4,10 @@
 
 This repository provides a minimal example of using [Falco](https://falco.org/) for detection and analysis. If you follow the instructions below, you will have Falco running, an Web UI to consume the Falco alerts and the Falco alert generator.
 
+<p align="center">
+  <img height="600px" src="https://github.com/bmarsh9/rc-falco/raw/main/images/web-ui.png" alt="Logo"/>
+</p>
+
 ## Prereqs
 
 + Ubuntu/debian based OS
