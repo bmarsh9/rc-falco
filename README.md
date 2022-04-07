@@ -30,7 +30,8 @@ apt-get install -y falco
 
 ```
 # Open /etc/falco/falco.yaml
-# Find the section that starts with `program_output` and it should look like below
+# Find the section that starts with `program_output` and it should look like below.
+# Be sure to replace your IP address (private) within the curl command
 
 program_output:
   enabled: true
