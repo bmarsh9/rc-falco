@@ -1,0 +1,158 @@
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="/docs/4.0/assets/img/favicons/favicon.ico">
+
+    <title>Research Charter</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.0/examples/blog/">
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:700,900" rel="stylesheet">
+    <link href="https://getbootstrap.com/docs/4.0/examples/blog/blog.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <div class="container">
+      <header class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+          <div class="col-3 pt-1">
+            <a class="text-muted" href="#">Salesforce</a>
+          </div>
+          <div class="col-6 text-center">
+            <a class="blog-header-logo text-dark" href="#">eBPF with Falco</a>
+          </div>
+          <div class="col-3 d-flex justify-content-end align-items-center">
+            <a id="alertCount" class="btn btn-sm text-danger" href="#">0 alerts</a>
+            <a id="pauseUpdates" value="0" class="btn btn-sm btn-outline-secondary" href="#">Pause</a>
+            <a id="dashboard" data-toggle="modal" data-target="#exampleModal" class="btn btn-sm btn-outline-primary ml-2" href="#">Dashboard</a>
+            <a class="btn btn-sm btn-outline-secondary ml-2" href="#">Code</a>
+          </div>
+        </div>
+      </header>
+
+      <div id="events" class="row mb-2">
+        <div id="placeholder" class="row mt-4">
+          <div class="col-md-12 blog-main text-center">
+            <h3 class="pb-3 mb-4 font-italic text-center border-bottom">
+              No Alerts!
+            </h3>
+          </div>
+        </div>
+      </div>
+    </div>
+    <footer class="blog-footer">
+      <p>Research charter</p>
+      <p>
+        <a href="#">Back to top</a>
+      </p>
+    </footer>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Alerts Dashboard</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div id="modalDashboard" class="col-md-12">
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Rule</th>
+      <th scope="col">Count</th>
+    </tr>
+  </thead>
+  <tbody id="tableBody">
+  </tbody>
+</table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://getbootstrap.com/docs/4.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js" integrity="sha512-q/dWJ3kcmjBLU4Qc47E4A9kTB4m3wuTY7vkFJDTZKjTs8jhyGQnaUrxa0Ytd0ssMZhbNua9hE+E7Qv1j+DyZwA==" crossorigin="anonymous"></script>
+  <script type="text/javascript" charset="utf-8">
+    alerts_seen = 0;
+    alerts_dict = {};
+    var socket = io();
+    socket.on('newEvent', function(data) {
+      console.log("New event")
+      // remove placeholder and update the alert count
+      $("#placeholder").html("");
+      ++alerts_seen
+      $("#alertCount").html(alerts_seen+" alerts");
+
+      // append the event to the template
+      $("#events").prepend(data["message"])
+      $.notify("New Alert",status="warn");
+
+      // add alerts to top level dict
+      rule_name = "("+data["priority"]+") "+data["rule"]+""
+      alerts_dict[rule_name] = (alerts_dict[rule_name] || 0) + 1;
+    });
+    socket.on('connect', function() {
+        socket.emit('my event', {data: 'I\'m connected!'});
+    });
+    // pause and unpause new alerts
+    $("#pauseUpdates").click(function(){
+      paused = $("#pauseUpdates").val();
+      if (paused === "1") {
+        $("#pauseUpdates").attr("class","btn btn-sm btn-outline-secondary")
+        $("#pauseUpdates").val("0")
+        $("#pauseUpdates").html("Pause")
+        paused = "0"
+      } else {
+        $("#pauseUpdates").attr("class","btn btn-sm btn-warning")
+        $("#pauseUpdates").val("1")
+        $("#pauseUpdates").html("Resume")
+        paused = "1"
+      };
+      socket.emit('pauseUpdates',paused);
+
+    })
+    function createRow(one,two) {
+      var tr = '<tr>' ;
+      tr += '<td>' + one  + '</td>';
+      tr += '<td>' + two  + '</td>';
+      tr +='</tr>';
+      return tr;
+    };
+    $('#exampleModal').on('shown.bs.modal', function () {
+      console.log("shown")
+      $('#tableBody').html("")
+      Object.keys(alerts_dict).forEach(function(key) {
+        row = createRow(key, alerts_dict[key])
+        $("#tableBody").append(row)
+      });
+    })
+  </script>
+
+  </body>
+</html>
