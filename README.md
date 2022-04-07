@@ -9,6 +9,9 @@ This repository provides a minimal example of using [Falco](https://falco.org/) 
 + Ubuntu/debian based OS
 + Docker installed (with docker tools for building images)
 
+## Warning
+
+This is for learning and not production use. Encryption/authentication is not enabled.
 
 ## First we need to install Falco
 
